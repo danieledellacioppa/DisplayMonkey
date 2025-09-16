@@ -182,10 +182,14 @@ DM.Canvas = Class.create({
 	resumePanels: function () {
 	    _canvas.fullScreenActive = false;
 	    _canvas.panels.forEach(function (p) {
-	        try {
-	            if (p.object && typeof p.object.play === "function")
-	                p.object.play();
-	        } catch (e) { }
+                try {
+                    if (p.object && typeof p.object.play === "function") {
+                        var playResult = p.object.play();
+                        if (playResult && typeof playResult.catch === "function") {
+                            playResult.catch(function () { });
+                        }
+                    }
+                } catch (e) { }
 	    });
 	},
 
