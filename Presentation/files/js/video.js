@@ -40,7 +40,12 @@ DM.Video = Class.create(DM.FrameBase, {
             video.insert({ top: e });
         });
 
-        if (options.play) video.play();
+        if (options.play) {
+            var playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(function () { });
+            }
+        }
     },
 
     stop: function ($super) {
@@ -58,7 +63,10 @@ DM.Video = Class.create(DM.FrameBase, {
     play: function ($super) {
         "use strict";
         $super();
-        this.video.play();
+        var playPromise = this.video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(function () { });
+        }
     },
 
     uninit: function ($super) {
