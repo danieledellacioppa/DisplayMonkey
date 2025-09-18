@@ -251,10 +251,11 @@ namespace DisplayMonkey.Controllers
             Content content = await db.Contents.FindAsync(id);
             if (content.Data != null)
             {
-                string contentType = string.Format(
-                    "video/{0}",
-                    System.IO.Path.GetExtension(content.Name).Replace(".", "").ToLower()
-                    );
+                string contentType =
+                    MimeTypeParser.GetMimeTypeRaw(content.Data)
+                    ?? MimeTypeParser.GetMimeTypeFromList(content.Name)
+                    ?? "application/octet-stream";
+
                 return File(content.Data, contentType);
             }
 
