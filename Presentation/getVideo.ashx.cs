@@ -35,6 +35,7 @@ namespace DisplayMonkey
             int frameId = request.IntOrZero("frame");
             int contentId = request.IntOrZero("content");
             int trace = request.IntOrZero("trace");
+            bool forceDownload = request.IntOrZero("download") != 0;
             
             try
 			{
@@ -96,10 +97,12 @@ namespace DisplayMonkey
 				}
 
 				response.ContentType = mimeType;
-				response.AddHeader("Content-Disposition", string.Format(
-					"attachment; filename=\"{0}\"",
-					mediaName
-					));
+                                string dispositionType = forceDownload ? "attachment" : "inline";
+                                response.AddHeader("Content-Disposition", string.Format(
+                                        "{0}; filename=\"{1}\"",
+                                        dispositionType,
+                                        mediaName
+                                        ));
 				response.AddHeader("Content-Length", data.Length.ToString());
 			}
 
